@@ -96,21 +96,21 @@ public class GardenBench extends Product {
         EuroPrice deliveryPrice;
         if (shouldBeDelivered) {
             if (lengthInCentimeters <= 200 && amountDefaultElements == 2) {
-                deliveryPrice = EuroPrice.ofEuros(70);
+                deliveryPrice = EuroPrice.ofEuros(70); //delivery price two defaultElements, standard length
             } else if (lengthInCentimeters <= 200 && amountDefaultElements == 1) {
-                deliveryPrice = EuroPrice.ofEuros(80);
+                deliveryPrice = EuroPrice.ofEuros(80); //delivery price single defaultElement, standard length
             } else if (lengthInCentimeters <= 200 && amountDefaultElements == 0) {
-                deliveryPrice = EuroPrice.ofEuros(90);
+                deliveryPrice = EuroPrice.ofEuros(90); //delivery price no defaultElements, standard length
             } else if (lengthInCentimeters <= 200) {
-                deliveryPrice = EuroPrice.ofEuros(130);
+                deliveryPrice = EuroPrice.ofEuros(130); //default delivery price >=3 defaultElements, standard length
             } else if (amountDefaultElements == 2) {
-                deliveryPrice = EuroPrice.ofEuros(100);
+                deliveryPrice = EuroPrice.ofEuros(100); //delivery price two defaultElements, oversize
             } else if (amountDefaultElements == 1) {
-                deliveryPrice = EuroPrice.ofEuros(110);
+                deliveryPrice = EuroPrice.ofEuros(110); //delivery price single defaultElement, oversize
             } else if (amountDefaultElements == 0) {
-                deliveryPrice = EuroPrice.ofEuros(120);
+                deliveryPrice = EuroPrice.ofEuros(120); //delivery price no defaultElements, oversize
             } else {
-                deliveryPrice = EuroPrice.ofEuros(130);
+                deliveryPrice = EuroPrice.ofEuros(130); //delivery price >=3 defaultElements, oversize
             }
         } else {
             deliveryPrice = EuroPrice.zero();
