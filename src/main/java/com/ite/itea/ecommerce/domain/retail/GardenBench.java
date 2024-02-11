@@ -41,7 +41,7 @@ public class GardenBench extends Product {
     @Override
     public String description() {
 
-        int totalLength = 0;
+        int totalLength;
         if (amountPlantElements == 1) {
             totalLength = lengthInCentimeters + 60;
         } else {
@@ -55,7 +55,7 @@ public class GardenBench extends Product {
                 .plus(PLANT_ELEMENT_PRICE.times(amountPlantElements))
                 .plus(extraLengthPrice())
                 .plus(WOOD_PLATE_PRICE)
-                .plus(hasBackrest ? BACKREST_PRICE : EuroPrice.zero());;
+                .plus(hasBackrest ? BACKREST_PRICE : EuroPrice.zero());
         final EuroPrice deliveryPrice = calculateDeliveryPrice();
         final EuroPrice totalPriceIncludingDelivery = productPrice.plus(deliveryPrice);
 
