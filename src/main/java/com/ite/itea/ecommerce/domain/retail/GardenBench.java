@@ -29,7 +29,11 @@ public class GardenBench extends Product {
 
     @Override
     public EuroPrice price() {
-        final EuroPrice productPrice = calculateProductPrice();
+        final EuroPrice productPrice = DEFAULT_ELEMENT_PRICE.times(amountDefaultElements)
+                .plus(PLANT_ELEMENT_PRICE.times(amountPlantElements))
+                .plus(extraLengthPrice())
+                .plus(WOOD_PLATE_PRICE)
+                .plus(hasBackrest ? BACKREST_PRICE : EuroPrice.zero());
         final EuroPrice deliveryPrice = calculateDeliveryPrice();
         return productPrice.plus(deliveryPrice);
     }
@@ -47,7 +51,11 @@ public class GardenBench extends Product {
                 totalLength = lengthInCentimeters + 16;
             }
         }
-        final EuroPrice productPrice = calculateProductPrice();
+        final EuroPrice productPrice = DEFAULT_ELEMENT_PRICE.times(amountDefaultElements)
+                .plus(PLANT_ELEMENT_PRICE.times(amountPlantElements))
+                .plus(extraLengthPrice())
+                .plus(WOOD_PLATE_PRICE)
+                .plus(hasBackrest ? BACKREST_PRICE : EuroPrice.zero());;
         final EuroPrice deliveryPrice = calculateDeliveryPrice();
         final EuroPrice totalPriceIncludingDelivery = productPrice.plus(deliveryPrice);
 
@@ -84,14 +92,6 @@ public class GardenBench extends Product {
                 + formattedDeliveryPrice;
     }
 
-    private EuroPrice calculateProductPrice() {
-        return DEFAULT_ELEMENT_PRICE.times(amountDefaultElements)
-                .plus(PLANT_ELEMENT_PRICE.times(amountPlantElements))
-                .plus(extraLengthPrice())
-                .plus(WOOD_PLATE_PRICE)
-                .plus(hasBackrest ? BACKREST_PRICE : EuroPrice.zero());
-    }
-
     private EuroPrice calculateDeliveryPrice() {
         EuroPrice deliveryPrice;
         if (shouldBeDelivered) {
@@ -125,16 +125,5 @@ public class GardenBench extends Product {
         return EuroPrice.zero();
     }
 
-    private String formatElementsText(int amountPlantElements, boolean hasBackrest) {
-        final var amountPlantElementsText = switch (amountPlantElements) {
-            case 1 -> "Elements: 1 of 2 elements is a plant element";
-            case 2 -> "Elements: 2 of 2 elements is a plant element";
-            default -> "Elements: 0 of 2 elements is a plant element";
-        };
-        final var backRestText = hasBackrest
-                ? ", has a backrest\n"
-                : ", has no backrest\n";
-        return amountPlantElementsText + backRestText;
-    }
 
 }
