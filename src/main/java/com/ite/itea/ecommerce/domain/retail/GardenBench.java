@@ -68,27 +68,29 @@ public class GardenBench extends Product {
     }
 
     private EuroPrice calculateDeliveryPrice() {
-        if (!shouldBeDelivered) {
-            return EuroPrice.zero();
-        }
-
-        if (lengthInCentimeters <= 200 && amountDefaultElements == 2) {
-            return EuroPrice.ofEuros(70);
-        } else if (lengthInCentimeters <= 200 && amountDefaultElements == 1) {
-            return EuroPrice.ofEuros(80);
-        } else if (lengthInCentimeters <= 200 && amountDefaultElements == 0) {
-            return EuroPrice.ofEuros(90);
-        } else if (lengthInCentimeters <= 200) {
-            return EuroPrice.ofEuros(130);
-        } else if (amountDefaultElements == 2){
-            return EuroPrice.ofEuros(100);
-        } else if (amountDefaultElements == 1){
-            return EuroPrice.ofEuros(110);
-        } else if (amountDefaultElements == 0){
-            return EuroPrice.ofEuros(120);
+        EuroPrice deliveryPrice;
+        if (shouldBeDelivered) {
+            if (lengthInCentimeters <= 200 && amountDefaultElements == 2) {
+                deliveryPrice = EuroPrice.ofEuros(70);
+            } else if (lengthInCentimeters <= 200 && amountDefaultElements == 1) {
+                deliveryPrice =  EuroPrice.ofEuros(80);
+            } else if (lengthInCentimeters <= 200 && amountDefaultElements == 0) {
+                deliveryPrice =  EuroPrice.ofEuros(90);
+            } else if (lengthInCentimeters <= 200) {
+                deliveryPrice =  EuroPrice.ofEuros(130);
+            } else if (amountDefaultElements == 2) {
+                deliveryPrice =  EuroPrice.ofEuros(100);
+            } else if (amountDefaultElements == 1) {
+                deliveryPrice =  EuroPrice.ofEuros(110);
+            } else if (amountDefaultElements == 0) {
+                deliveryPrice =  EuroPrice.ofEuros(120);
+            } else {
+                deliveryPrice =  EuroPrice.ofEuros(130);
+            }
         } else {
-            return EuroPrice.ofEuros(130);
+            deliveryPrice =  EuroPrice.zero();
         }
+        return deliveryPrice;
     }
 
     private EuroPrice extraLengthPrice() {
