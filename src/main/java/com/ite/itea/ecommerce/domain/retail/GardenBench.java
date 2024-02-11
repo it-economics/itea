@@ -47,16 +47,41 @@ public class GardenBench extends Product {
                 totalLength = lengthInCentimeters + 16;
             }
         }
-
-
         final EuroPrice productPrice = calculateProductPrice();
         final EuroPrice deliveryPrice = calculateDeliveryPrice();
         final EuroPrice totalPriceIncludingDelivery = productPrice.plus(deliveryPrice);
+
+        String formattedDeliveryPrice;
+        if (shouldBeDelivered) {
+            formattedDeliveryPrice = "Total price (without delivery): " + productPrice.formatPrice() + "\n"
+                    + "Total price (including delivery): " + totalPriceIncludingDelivery.formatPrice() + "\n";
+        } else {
+            formattedDeliveryPrice = "Total price: " + productPrice.formatPrice() + "\n";
+        }
+
+        String formattedDeliveryText;
+        if (shouldBeDelivered) {
+            formattedDeliveryText = "Delivery Type: Product is delivered for " + deliveryPrice.formatPrice() + "\n";
+        } else {
+            formattedDeliveryText = "Delivery Type: Product is collected for " + deliveryPrice.formatPrice() + "\n";
+        }
+
+        String formattedElementText;
+
+        if (amountPlantElements==1) {
+            formattedElementText = "Elements: 1 of 2 elements is a plant element";
+        } else if (amountPlantElements==2) {
+            formattedElementText = "Elements: 2 of 2 elements is a plant element";
+        }  else {
+            formattedElementText = "Elements: 0 of 2 elements is a plant element";
+        }
+        formattedElementText += hasBackrest ? ", has a backrest\n" : ", has no backrest\n";
+
         return "Order for a garden bench:\n"
-                + formatElementsText(amountPlantElements, hasBackrest)
+                + formattedElementText
                 + "Total length: " + totalLength + " cm\n"
-                + formatDeliveryText(shouldBeDelivered, deliveryPrice)
-                + formatDeliveryPriceText(productPrice, totalPriceIncludingDelivery);
+                + formattedDeliveryText
+                + formattedDeliveryPrice;
     }
 
     private EuroPrice calculateProductPrice() {
@@ -73,22 +98,22 @@ public class GardenBench extends Product {
             if (lengthInCentimeters <= 200 && amountDefaultElements == 2) {
                 deliveryPrice = EuroPrice.ofEuros(70);
             } else if (lengthInCentimeters <= 200 && amountDefaultElements == 1) {
-                deliveryPrice =  EuroPrice.ofEuros(80);
+                deliveryPrice = EuroPrice.ofEuros(80);
             } else if (lengthInCentimeters <= 200 && amountDefaultElements == 0) {
-                deliveryPrice =  EuroPrice.ofEuros(90);
+                deliveryPrice = EuroPrice.ofEuros(90);
             } else if (lengthInCentimeters <= 200) {
-                deliveryPrice =  EuroPrice.ofEuros(130);
+                deliveryPrice = EuroPrice.ofEuros(130);
             } else if (amountDefaultElements == 2) {
-                deliveryPrice =  EuroPrice.ofEuros(100);
+                deliveryPrice = EuroPrice.ofEuros(100);
             } else if (amountDefaultElements == 1) {
-                deliveryPrice =  EuroPrice.ofEuros(110);
+                deliveryPrice = EuroPrice.ofEuros(110);
             } else if (amountDefaultElements == 0) {
-                deliveryPrice =  EuroPrice.ofEuros(120);
+                deliveryPrice = EuroPrice.ofEuros(120);
             } else {
-                deliveryPrice =  EuroPrice.ofEuros(130);
+                deliveryPrice = EuroPrice.ofEuros(130);
             }
         } else {
-            deliveryPrice =  EuroPrice.zero();
+            deliveryPrice = EuroPrice.zero();
         }
         return deliveryPrice;
     }
@@ -112,19 +137,4 @@ public class GardenBench extends Product {
         return amountPlantElementsText + backRestText;
     }
 
-    private String formatDeliveryText(boolean isDelivery, EuroPrice deliveryPrice) {
-        String deliveryText = isDelivery
-                ? "Delivery Type: Product is delivered "
-                : "Delivery Type: Product is collected ";
-        return deliveryText + "for " + deliveryPrice.formatPrice() + "\n";
-    }
-
-    private String formatDeliveryPriceText(EuroPrice priceWithoutDelivery, EuroPrice priceIncludingDelivery) {
-        if (shouldBeDelivered) {
-            return "Total price (without delivery): " + priceWithoutDelivery.formatPrice() + "\n"
-                    + "Total price (including delivery): " + priceIncludingDelivery.formatPrice() + "\n";
-        } else {
-            return "Total price: " + priceWithoutDelivery.formatPrice() + "\n";
-        }
-    }
 }
