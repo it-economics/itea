@@ -36,12 +36,25 @@ public class GardenBench extends Product {
 
     @Override
     public String description() {
+
+        int totalLength = 0;
+        if (amountPlantElements == 1) {
+            totalLength = lengthInCentimeters + 60;
+        } else {
+            if (amountPlantElements == 2) {
+                totalLength = lengthInCentimeters + 108;
+            } else {
+                totalLength = lengthInCentimeters + 16;
+            }
+        }
+
+
         final EuroPrice productPrice = calculateProductPrice();
         final EuroPrice deliveryPrice = calculateDeliveryPrice();
         final EuroPrice totalPriceIncludingDelivery = productPrice.plus(deliveryPrice);
         return "Order for a garden bench:\n"
                 + formatElementsText(amountPlantElements, hasBackrest)
-                + "Total length: " + totalLength(amountPlantElements, lengthInCentimeters) + " cm\n"
+                + "Total length: " + totalLength + " cm\n"
                 + formatDeliveryText(shouldBeDelivered, deliveryPrice)
                 + formatDeliveryPriceText(productPrice, totalPriceIncludingDelivery);
     }
@@ -59,20 +72,22 @@ public class GardenBench extends Product {
             return EuroPrice.zero();
         }
 
-        if (lengthInCentimeters <= 200) {
-            return switch (amountDefaultElements) {
-                case 2 -> EuroPrice.ofEuros(70);
-                case 1 -> EuroPrice.ofEuros(80);
-                case 0 -> EuroPrice.ofEuros(90);
-                default -> EuroPrice.ofEuros(130);
-            };
+        if (lengthInCentimeters <= 200 && amountDefaultElements == 2) {
+            return EuroPrice.ofEuros(70);
+        } else if (lengthInCentimeters <= 200 && amountDefaultElements == 1) {
+            return EuroPrice.ofEuros(80);
+        } else if (lengthInCentimeters <= 200 && amountDefaultElements == 0) {
+            return EuroPrice.ofEuros(90);
+        } else if (lengthInCentimeters <= 200) {
+            return EuroPrice.ofEuros(130);
+        } else if (amountDefaultElements == 2){
+            return EuroPrice.ofEuros(100);
+        } else if (amountDefaultElements == 1){
+            return EuroPrice.ofEuros(110);
+        } else if (amountDefaultElements == 0){
+            return EuroPrice.ofEuros(120);
         } else {
-            return switch (amountDefaultElements) {
-                case 2 -> EuroPrice.ofEuros(100);
-                case 1 -> EuroPrice.ofEuros(110);
-                case 0 -> EuroPrice.ofEuros(120);
-                default -> EuroPrice.ofEuros(130);
-            };
+            return EuroPrice.ofEuros(130);
         }
     }
 
@@ -109,13 +124,5 @@ public class GardenBench extends Product {
         } else {
             return "Total price: " + priceWithoutDelivery.formatPrice() + "\n";
         }
-    }
-
-    private int totalLength(int amountPlantElements, int length) {
-        return switch (amountPlantElements) {
-            case 1 -> length + 60;
-            case 2 -> length + 108;
-            default -> length + 16;
-        };
     }
 }
