@@ -4,13 +4,13 @@ import com.ite.itea.ecommerce.domain.core.EuroPrice;
 
 public class GardenBench extends Product {
 
-    private static final EuroPrice DEFAULT_ELEMENT_PRICE = EuroPrice.ofEuros(80);
-    private static final EuroPrice PLANT_ELEMENT_PRICE = EuroPrice.ofEuros(130);
-    private static final EuroPrice WOOD_PLATE_PRICE = EuroPrice.ofEuros(70);
-    private static final EuroPrice BACKREST_PRICE = EuroPrice.ofEuros(50);
+    private static final EuroPrice DEFAULT_ELEMENT_PR = EuroPrice.ofEuros(80);
+    private static final EuroPrice PLANT_ELEMENT_PR = EuroPrice.ofEuros(130);
+    private static final EuroPrice WOOD_PLATE_PR = EuroPrice.ofEuros(70);
+    private static final EuroPrice BACKREST_PR = EuroPrice.ofEuros(50);
 
-    private static final int STANDARD_LENGTH_IN_CM = 165;
-    private static final EuroPrice EXTRA_LENGTH_FEE_PER_CENTIMETER = EuroPrice.ofEuros(1);
+    private static final int STANDARD_LENGTH = 165; //cm
+    private static final EuroPrice EXTRA_LENGTH_FEE = EuroPrice.ofEuros(1); //per cm
 
     private final int lengthInCentimeters;
     private final int amountDefaultElements;
@@ -29,98 +29,97 @@ public class GardenBench extends Product {
 
     @Override
     public EuroPrice price() {
-        final EuroPrice productPrice = DEFAULT_ELEMENT_PRICE.times(amountDefaultElements)
-                .plus(PLANT_ELEMENT_PRICE.times(amountPlantElements))
+        final EuroPrice basePrice = DEFAULT_ELEMENT_PR.times(amountDefaultElements)
+                .plus(PLANT_ELEMENT_PR.times(amountPlantElements))
                 .plus(extraLengthPrice())
-                .plus(WOOD_PLATE_PRICE)
-                .plus(hasBackrest ? BACKREST_PRICE : EuroPrice.zero());
-        final EuroPrice deliveryPrice = calculateDeliveryPrice();
-        return productPrice.plus(deliveryPrice);
+                .plus(WOOD_PLATE_PR)
+                .plus(hasBackrest ? BACKREST_PR : EuroPrice.zero());
+        final EuroPrice additionalPrice = calculateDeliveryPrice();
+        return basePrice.plus(additionalPrice);
     }
 
     @Override
     public String description() {
 
-        int totalLength;
+        int value; //calculates the total length
         if (amountPlantElements == 1) {
-            totalLength = lengthInCentimeters + 60;
+            value = lengthInCentimeters + 60;
         } else {
             if (amountPlantElements == 2) {
-                totalLength = lengthInCentimeters + 108;
+                value = lengthInCentimeters + 108;
             } else {
-                totalLength = lengthInCentimeters + 16;
+                value = lengthInCentimeters + 16;
             }
         }
-        final EuroPrice productPrice = DEFAULT_ELEMENT_PRICE.times(amountDefaultElements)
-                .plus(PLANT_ELEMENT_PRICE.times(amountPlantElements))
+        final EuroPrice price = DEFAULT_ELEMENT_PR.times(amountDefaultElements)
+                .plus(PLANT_ELEMENT_PR.times(amountPlantElements))
                 .plus(extraLengthPrice())
-                .plus(WOOD_PLATE_PRICE)
-                .plus(hasBackrest ? BACKREST_PRICE : EuroPrice.zero());
-        final EuroPrice deliveryPrice = calculateDeliveryPrice();
-        final EuroPrice totalPriceIncludingDelivery = productPrice.plus(deliveryPrice);
+                .plus(WOOD_PLATE_PR)
+                .plus(hasBackrest ? BACKREST_PR : EuroPrice.zero());
+        final EuroPrice fee = calculateDeliveryPrice();
+        final EuroPrice totalPriceIncludingDelivery = price.plus(fee);
 
-        String formattedDeliveryPrice;
+        String priceText;
         if (shouldBeDelivered) {
-            formattedDeliveryPrice = "Total price (without delivery): " + productPrice.formatPrice() + "\n"
+            priceText = "Total price (without delivery): " + price.formatPrice() + "\n"
                     + "Total price (including delivery): " + totalPriceIncludingDelivery.formatPrice() + "\n";
         } else {
-            formattedDeliveryPrice = "Total price: " + productPrice.formatPrice() + "\n";
+            priceText = "Total price: " + price.formatPrice() + "\n";
         }
 
-        String formattedDeliveryText;
+        String feeText;
         if (shouldBeDelivered) {
-            formattedDeliveryText = "Delivery Type: Product is delivered for " + deliveryPrice.formatPrice() + "\n";
+            feeText = "Delivery Type: Product is delivered for " + fee.formatPrice() + "\n";
         } else {
-            formattedDeliveryText = "Delivery Type: Product is collected for " + deliveryPrice.formatPrice() + "\n";
+            feeText = "Delivery Type: Product is collected for " + fee.formatPrice() + "\n";
         }
 
-        String formattedElementText;
-
+        String formattedElement;
         if (amountPlantElements==1) {
-            formattedElementText = "Elements: 1 of 2 elements is a plant element";
+            formattedElement = "Elements: 1 of 2 elements is a plant element";
         } else if (amountPlantElements==2) {
-            formattedElementText = "Elements: 2 of 2 elements is a plant element";
+            formattedElement = "Elements: 2 of 2 elements is a plant element";
         }  else {
-            formattedElementText = "Elements: 0 of 2 elements is a plant element";
+            formattedElement = "Elements: 0 of 2 elements is a plant element";
         }
-        formattedElementText += hasBackrest ? ", has a backrest\n" : ", has no backrest\n";
+        formattedElement += hasBackrest ? ", has a backrest\n" : ", has no backrest\n";
 
         return "Order for a garden bench:\n"
-                + formattedElementText
-                + "Total length: " + totalLength + " cm\n"
-                + formattedDeliveryText
-                + formattedDeliveryPrice;
+                + formattedElement
+                + "Total length: " + value + " cm\n"
+                + feeText
+                + priceText;
     }
 
     private EuroPrice calculateDeliveryPrice() {
-        EuroPrice deliveryPrice;
+        EuroPrice price;
         if (shouldBeDelivered) {
             if (lengthInCentimeters <= 200 && amountDefaultElements == 2) {
-                deliveryPrice = EuroPrice.ofEuros(70); //delivery price two defaultElements, standard length
+                price = EuroPrice.ofEuros(70); //delivery price two defaultElements, standard length
             } else if (lengthInCentimeters <= 200 && amountDefaultElements == 1) {
-                deliveryPrice = EuroPrice.ofEuros(80); //delivery price single defaultElement, standard length
+                price = EuroPrice.ofEuros(80); //delivery price single defaultElement, standard length
             } else if (lengthInCentimeters <= 200 && amountDefaultElements == 0) {
-                deliveryPrice = EuroPrice.ofEuros(90); //delivery price no defaultElements, standard length
+                price = EuroPrice.ofEuros(90); //delivery price no defaultElements, standard length
             } else if (lengthInCentimeters <= 200) {
-                deliveryPrice = EuroPrice.ofEuros(130); //default delivery price >=3 defaultElements, standard length
+                price = EuroPrice.ofEuros(130); //default delivery price >=3 defaultElements, standard length
             } else if (amountDefaultElements == 2) {
-                deliveryPrice = EuroPrice.ofEuros(100); //delivery price two defaultElements, oversize
+                price = EuroPrice.ofEuros(100); //delivery price two defaultElements, oversize
             } else if (amountDefaultElements == 1) {
-                deliveryPrice = EuroPrice.ofEuros(110); //delivery price single defaultElement, oversize
+                price = EuroPrice.ofEuros(110); //delivery price single defaultElement, oversize
             } else if (amountDefaultElements == 0) {
-                deliveryPrice = EuroPrice.ofEuros(120); //delivery price no defaultElements, oversize
+                price = EuroPrice.ofEuros(120); //delivery price no defaultElements, oversize
             } else {
-                deliveryPrice = EuroPrice.ofEuros(130); //delivery price >=3 defaultElements, oversize
+                price = EuroPrice.ofEuros(130); //delivery price >=3 defaultElements, oversize
             }
         } else {
-            deliveryPrice = EuroPrice.zero();
+            price = EuroPrice.zero();
         }
-        return deliveryPrice;
+        return price;
     }
 
     private EuroPrice extraLengthPrice() {
-        if (lengthInCentimeters > STANDARD_LENGTH_IN_CM) {
-            return EXTRA_LENGTH_FEE_PER_CENTIMETER.times(lengthInCentimeters - STANDARD_LENGTH_IN_CM);
+        if (lengthInCentimeters > STANDARD_LENGTH) {
+            return EXTRA_LENGTH_FEE.times(lengthInCentimeters - STANDARD_LENGTH);
         }
         return EuroPrice.zero();
     }
