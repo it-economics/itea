@@ -11,37 +11,25 @@ public class ReceiptPresenter implements com.ite.itea.ecommerce.usecase.port.Rec
 
     @Override
     public Receipt prepareReceipt(Order order) {
-        final var price = totalPrice(order);
-        final var text = getText(order);
-
-        return new Receipt(price.asCents(), text);
-    }
-
-    private String getText(Order order) {
-        final var formattedProducts = order.items().stream()
-                .map(this::formatOrderItem)
-                .collect(Collectors.joining());
-
-        return "itea \n"
-                + formattedProducts
-                + "Total " + totalPrice(order).formatPrice();
-    }
-
-    private String formatOrderItem(Order.OrderItem orderItem) {
-        if (orderItem.amount() == 0) {
-            return "";
+        String totalText = "";
+        for (Order.OrderItem orderItem : order.items()) {
+            String text;
+            if (orderItem.amount() == 0) {
+                text = "";
+            } else {
+                text = MessageFormat.format("{0} {1} * {2}\n", orderItem.product().name(), orderItem.product().price().formatPrice(), orderItem.amount());
+            }
+            totalText += text;
         }
 
-        final var product = orderItem.product();
-        final var productName = product.name();
-        final var price = product.price().formatPrice();
-        final var amount = orderItem.amount();
-        return MessageFormat.format("{0} {1} * {2}\n", productName, price, amount);
+        EuroPrice totalPrice = EuroPrice.zero();
+        for (Order.OrderItem orderItem : order.items()) {
+            totalPrice = totalPrice.plus(orderItem.product().price().times(orderItem.amount()));
+        }
+
+        totalText = "itea \n" + totalText + "Total " + totalPrice.formatPrice();
+
+        return new Receipt(totalPrice.asCents(), totalText);
     }
 
-    private EuroPrice totalPrice(Order order) {
-        return order.items().stream()
-                .map(orderItem -> orderItem.product().price().times(orderItem.amount()))
-                .reduce(EuroPrice.zero(), EuroPrice::plus);
-    }
 }
