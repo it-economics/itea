@@ -111,3 +111,11 @@ Clean code developers do not consider themselves satisfied with healing symptoms
 Example: Sorting data in memory is too slow. A symptom cure would strive to speed up single instructions or instruction blocks.
 Maybe unsafe code or parallelization becomes an option. A thorough root cause analysis would have shown that the chosen sort algorithm is the real culprit.
 Hard to understand low level optimizations hence can be avoided by choosing a better algorithm.
+
+## Refactoring: Instructions
+
+We have two units that are in really bad conditions. They are based on a very quick implementation of our last release.
+Please  refactor these technical debts to a 'better' code state. Please apply all rules and procedures of refactoring
+for following classes:
+- GardenBench
+- ReceiptPresenter
