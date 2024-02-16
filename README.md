@@ -21,3 +21,12 @@ Endpoints:
 * Java 17
 * Maven
 * Postman
+
+
+## 12 Red Refactoring: Instructions
+
+We have two units that are in really bad conditions. They are based on a very quick implementation of our last release.
+Please  refactor these technical debts to a 'better' code state. Please apply all rules and procedures of refactoring
+for following classes:
+- GardenBench
+- ReceiptPresenter
