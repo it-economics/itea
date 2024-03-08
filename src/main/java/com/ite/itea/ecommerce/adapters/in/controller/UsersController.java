@@ -10,6 +10,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
 @Controller
+@Tag(name="Users")
 public class UsersController {
 
     private final GetFullNameUseCase getFullNameUseCase;
@@ -33,6 +37,7 @@ public class UsersController {
         );
     }
 
+    @Operation(summary = "fullname by id", description = "displays conmplete name of a user with given id")
     @GetMapping(path = "/user/{id}/fullname")
     @ResponseBody
     public String getFullNameByUserId(@PathVariable String id) {

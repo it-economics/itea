@@ -6,6 +6,8 @@ import com.ite.itea.ecommerce.usecase.OrderProductsUseCase;
 import com.ite.itea.ecommerce.usecase.dto.OrderRequest;
 import com.ite.itea.ecommerce.usecase.dto.Receipt;
 import com.ite.itea.ecommerce.usecase.dto.ReceiptResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@Tag(name="Checkout")
 public class CheckoutController {
 
     private final OrderProductsUseCase orderProductsUseCase = new OrderProductsUseCase(
@@ -20,6 +23,7 @@ public class CheckoutController {
             new ReceiptPresenter()
     );
 
+    @Operation(summary="calculate", description="calculates prices & information for given orders")
     @ResponseBody
     @PostMapping(path = "/checkout",
             consumes = MediaType.APPLICATION_JSON_VALUE,
