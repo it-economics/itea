@@ -59,6 +59,9 @@
     <profiles>
         <profile>
             <id>generate_clients</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -72,6 +75,8 @@
                         </configuration>
                         <executions>
                             <execution>
+                                <!-- start and sptop the application after tests-->
+                                <!-- needed to extract the api description and convert to json-->
                                 <id>pre-integration-test</id>
                                 <goals>
                                     <goal>start</goal>
@@ -95,6 +100,8 @@
                         <version>1.4</version>
                         <executions>
                             <execution>
+                                <!-- download api description YAML from swagger api endpoint and convert to json-->
+                                <!-- json api description is base for code generators below-->
                                 <id>integration-test</id>
                                 <goals>
                                     <goal>generate</goal>
