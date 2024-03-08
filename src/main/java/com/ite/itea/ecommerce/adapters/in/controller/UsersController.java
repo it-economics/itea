@@ -37,7 +37,7 @@ public class UsersController {
         );
     }
 
-    @Operation(summary = "fullname by id", description = "displays conmplete name of a user with given id")
+    @Operation(summary = "fullname by id", description = "displays complete name of a user with given id")
     @GetMapping(path = "/user/{id}/fullname")
     @ResponseBody
     public String getFullNameByUserId(@PathVariable String id) {
