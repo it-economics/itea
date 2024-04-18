@@ -22,7 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @Tag(name="Users")
-public class UsersController {
+public class UsersController  extends BaseController {
 
     private final GetFullNameUseCase getFullNameUseCase;
 

@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Controller
 @Tag(name = "Product")
-public class ProductController {
+public class ProductController  extends BaseController {
 
     private final GetProductsUseCase getProductsUseCase = new GetProductsUseCase(
             new InMemoryProductRepository()
