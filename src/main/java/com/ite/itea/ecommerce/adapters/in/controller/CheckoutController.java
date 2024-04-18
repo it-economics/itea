@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @Tag(name="Checkout")
-public class CheckoutController extends BaseController {
+public class CheckoutController {
 
     private final OrderProductsUseCase orderProductsUseCase = new OrderProductsUseCase(
             new InMemoryProductRepository(),
